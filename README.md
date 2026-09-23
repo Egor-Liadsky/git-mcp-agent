@@ -41,7 +41,7 @@ cargo install --git https://github.com/Egor-Liadsky/git-mcp-agent git-mcp
 ```
 
 Из локальной копии (в зонтичном репозитории
-[`agent`](https://github.com/Egor-Liadsky/agent) она лежит подмодулем `mcp`):
+[`agent`](https://github.com/Egor-Liadsky/agent) она лежит подмодулем `mcp/git`):
 
 ```bash
 cargo install --path crates/git
