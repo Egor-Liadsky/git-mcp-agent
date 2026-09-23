@@ -1,8 +1,9 @@
-//! `agentcli-git-mcp` — MCP-сервер git-инструментов для `agentcli`.
+//! `git-mcp` — MCP-сервер git-инструментов.
 //!
-//! Отдельный бинарник, а не подкоманда `agentcli`: у сервера свой граф
-//! зависимостей (серверная часть `rmcp`, `schemars`) без терминальных
-//! крейтов клиента, и его можно подключить к любому MCP-клиенту.
+//! Отдельный процесс со своим графом зависимостей (серверная часть `rmcp`,
+//! `schemars`), не связанный с кодом клиентов: подключается к любому
+//! MCP-клиенту, который умеет запускать сервер через stdio (например,
+//! `agentcli`).
 //!
 //! Имена и аргументы инструментов совпадают с `mcp-server-git`, чтобы
 //! клиент (классификация читающих и пишущих, подтверждение) не зависел от
@@ -10,7 +11,7 @@
 //! инструментов `mcp-server-git`, здесь не объявлен и игнорируется:
 //! репозиторий задаётся только ключом `--repository` при запуске.
 //!
-//! Запуск: `agentcli-git-mcp --repository <путь>`; протокол — JSON-RPC
+//! Запуск: `git-mcp --repository <путь>`; протокол — JSON-RPC
 //! через stdin/stdout.
 
 mod git;
@@ -292,7 +293,7 @@ fn repository_arg(args: impl Iterator<Item = String>) -> Result<PathBuf, String>
             return Ok(PathBuf::from(path));
         }
     }
-    Err("использование: agentcli-git-mcp --repository <путь к git-репозиторию>".to_string())
+    Err("использование: git-mcp --repository <путь к git-репозиторию>".to_string())
 }
 
 #[tokio::main(flavor = "current_thread")]

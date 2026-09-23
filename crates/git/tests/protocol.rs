@@ -1,4 +1,4 @@
-//! Сервер проверяется так, как его видит `agentcli`: настоящий процесс,
+//! Сервер проверяется так, как его видит MCP-клиент: настоящий процесс,
 //! MCP-клиент `rmcp` через stdin/stdout, временный git-репозиторий.
 
 use rmcp::model::CallToolRequestParams;
@@ -9,7 +9,7 @@ use serde_json::{json, Value};
 use std::path::{Path, PathBuf};
 use std::process::Stdio;
 
-const BINARY: &str = env!("CARGO_BIN_EXE_agentcli-git-mcp");
+const BINARY: &str = env!("CARGO_BIN_EXE_git-mcp");
 
 /// Временный репозиторий с одним коммитом и незакоммиченными правками.
 fn temp_repo(name: &str) -> PathBuf {
@@ -17,7 +17,7 @@ fn temp_repo(name: &str) -> PathBuf {
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap()
         .as_nanos();
-    let dir = std::env::temp_dir().join(format!("agentcli-git-mcp-{name}-{nanos}"));
+    let dir = std::env::temp_dir().join(format!("git-mcp-{name}-{nanos}"));
     std::fs::create_dir_all(&dir).unwrap();
     let git = |args: &[&str]| {
         let status = std::process::Command::new("git")
@@ -100,7 +100,7 @@ async fn lists_the_same_tools_as_mcp_server_git() {
 async fn reads_and_writes_the_repository() {
     let repo = temp_repo("rw");
     let client = connect(&repo).await;
-    // Клиент agentcli подставляет repo_path сам — сервер его игнорирует.
+    // Клиенты (например, agentcli) подставляют repo_path сами — сервер его игнорирует.
     let foreign = json!({ "repo_path": "/etc" });
 
     let (status, error) = call(&client, "git_status", foreign.clone()).await;
